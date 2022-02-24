@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="http://127.0.0.1:8080/assets/libs/leaflet/leaflet.css" />
+  <link rel="stylesheet" href="http://127.0.0.1:8080/assets/libs/leaflet/MarkerCluster.css" />
+  <link rel="stylesheet" href="http://127.0.0.1:8080/assets/libs/leaflet/leaflet-velocity.min.css">
+
+  <link rel="stylesheet" href="http://127.0.0.1:8080/assets/libs/leaflet/styledLayerControl.css">
+
+  <link rel="stylesheet" href="http://127.0.0.1:8080/assets/libs/css/styles.css" />
+  <script src="http://127.0.0.1:8080/assets/libs/jquery.min.js"></script>
+  <script src="http://127.0.0.1:8080/assets/libs/leaflet/leaflet.js"></script>
+  <script src="http://127.0.0.1:8080/assets/libs/leaflet/protomap.js"></script>
+  <script src="http://127.0.0.1:8080/assets/libs/leaflet/leaflet.geometryutil.js"></script>
+  <!-- MBTILES -->
+  <!-- <script src="http://127.0.0.1:8080/assets/libs/leaflet/sql.js"></script> -->
+  <!-- <script src="http://127.0.0.1:8080/assets/libs/leaflet/Leaflet.TileLayer.MBTiles.js"></script> -->
+
+
+
+
+  <script src="http://127.0.0.1:8080/assets/libs/leaflet/styledLayerControl.js"></script>
+  <script src="http://127.0.0.1:8080/assets/libs/leaflet/Leaflet.LayerGroup.Collision.js"></script>
+  <script src="http://127.0.0.1:8080/assets/libs/leaflet/rbush.js"></script>
+  <script src="http://127.0.0.1:8080/assets/libs/leaflet/leaflet.polylineDecorator.js"></script>
+
+  <script src="http://127.0.0.1:8080/assets/libs/leaflet/topojson.min.js"></script>
+  <script src="http://127.0.0.1:8080/assets/libs/leaflet/leaflet.markercluster.js"></script>
+  <script src="http://127.0.0.1:8080/assets/libs/leaflet/leaflet-velocity.min.js"></script>
+  <script src="http://127.0.0.1:8080/assets/libs/leaflet/leaflet-velocity.min.js"></script>
+  <script src="http://127.0.0.1:8080/assets/libs/leaflet/Leaflet.Graticule.js"></script>
+  <script src="http://127.0.0.1:8080/assets/libs/leaflet/turf.min.js"></script>
+  <script src="http://127.0.0.1:8080/assets/libs/leaflet/leaflet-polygon.fillPattern.js"></script>
+  <script src="http://127.0.0.1:8080/assets/libs/leaflet/leaflet-ant-path.js"></script>
+</head>
+
+<style>
+  #map {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+  }
+</style>
+
+<body>
+  <div id="map"></div>
+  <script>
+    var map = L.map('map');
+
+    map.setView(new L.LatLng(12, 77), 6, { animation: false });
+
+    // var vectorTileOptions = {
+    //   rendererFactory: L.canvas.tile,
+    //   vectorTileLayerStyles: {
+    //     cities: function (properties) { 
+    //       return styleCity(properties);
+    //     }
+    //   },
+    //   interactive: true,
+    //   getFeatureId: function (f) {
+    //     return f.properties.id;
+    //   }
+    // };
+
+    // tilesPbfLayer = L.vectorGrid.protobuf('http://localhost:5501/bathy/z09/{z}/{x}/{y}.pbf', vectorTileOptions);
+    // tilesPbfLayer.addTo(map);
+
+    // function styleCity(properties) {
+    //     return {
+    //         fill: true,
+    //         fillColor: properties.fillcolor,
+    //         fillOpacity: 0.1,
+    //         stroke: true,
+    //         color: "#595959",
+    //         weight: 0.4
+    //     };
+    // }
+
+    let baseurl = 'https://storage.googleapis.com/n8-bsaemaps/india-latest.pmtiles?GoogleAccessId=gs-reader%40fishedge-dev.iam.gserviceaccount.com&Expires=1645711346&Signature=baq0GhZDdaeDwt%2FQqteUR8DzUQAqZO4rinOLdNgTx%2FeUN1lQsCAHVJePA0A6o817WT%2FwF4yFPfD7nh2go%2FCcvQblRKgX%2FkKZG6%2BHMY3nCc6TekAe1AdNy%2B99s2XUCJwZ2rGYqdGah7Fl3mei9xb8%2Bs2fRlRT4%2B1VYOLEzcepzUgpdhLb0hgai%2F4U9VM8wsO37G3jI4BpZuF8WkfEle7gTXUz9dl6mRthK6uEPi8eo4ltGYZ8LG68LClhFj5t3yU9bcIGzblqOV16FBQ2oYOwa0FPVmUiqf9AR58JQHG6rt3CyHmkzptRIJSA3AfZ2rftjMLhOIWF0lW1j55%2BSNu8Pw%3D%3D'
+    let basejson_style;
+    var basestyle = "{\"layers\":[{\"type\":\"line\",\"source-layer\":\"transportation\",\"paint\":{\"line-color\":\"#ab2c49\",\"line-width\":2}},{\"type\":\"line\",\"source-layer\":\"waterway\",\"paint\":{\"line-color\":\"#c2c2c2\",\"line-width\":2}},{\"type\":\"line\",\"source-layer\":\"aeroway\",\"paint\":{\"line-color\":\"#f3f3f3\",\"line-width\":4}},{\"type\":\"fill\",\"source-layer\":\"building\",\"paint\":{\"fill-color\":\"#f3f3f3\",\"fill-opacity\":0.5}},{\"type\":\"fill\",\"source-layer\":\"water\",\"paint\":{\"fill-color\":\"#bfbfbf\",\"fill-opacity\":1}},{\"type\":\"line\",\"source-layer\":\"state_boundary\",\"paint\":{\"line-color\":\"#6a6a6a77\",\"line-width\":2}},{\"type\":\"line\",\"source-layer\":\"country_boundary\",\"paint\":{\"line-color\":\"#727272\",\"line-width\":0.25}},{\"type\":\"symbol\",\"source-layer\":\"transportation_name\",\"layout\":{\"text-size\":10,\"text-font\":\"sans-serif\",\"symbol-placement\":\"line\"},\"paint\":{\"text-color\":\"#070707\",\"text-halo-color\":\"#00000000\",\"text-halo-width\":0}},{\"type\":\"fill\",\"source-layer\":\"buildings\",\"paint\":{\"fill-color\":\"black\"}},{\"type\":\"symbol\",\"source-layer\":\"place\",\"layout\":{\"text-size\":10,\"text-font\":\"sans-serif\"},\"paint\":{\"text-color\":\"#070707\"}}]}"
+    console.log('STEP 1')
+    try {
+      basejson_style = JSON.parse(basestyle);
+    }
+    catch (e) {
+      basejson_style = basestyle;
+    }
+    console.log('STEP 2')
+    let bresult = new protomaps.json_style(basejson_style, {})
+    const base = new protomaps.PMTiles(baseurl)
+    console.log('STEP 3')
+    for(const key in base){
+      console.log(`${key} `,base[key])
+    }
+    base.metadata().then(m => {
+      console.log('STEP 4')
+      let bounds_str = m.bounds.split(',')
+      let bounds = [[+bounds_str[1], +bounds_str[0]], [+bounds_str[3], +bounds_str[2]]]
+      layer = protomaps.leafletLayer({ url: base, bounds: bounds, paint_rules: bresult.paint_rules, label_rules: bresult.label_rules })
+      console.log('STEP 5')
+      layer.addTo(map)
+    });
+
+
+    console.log('BATHY STEP 1')
+    let bathyurl = 'https://storage.googleapis.com/mvt_test/bathymetry/bathy_z11_3857_nogzip.pmtiles?GoogleAccessId=gs-reader%40fishedge-dev.iam.gserviceaccount.com&Expires=1645785616&Signature=ZyFZp%2BMlFmkB9xO99iPD8qyBHj0FxNEHRC14oBasmScU5X8mbB1W6BzyzbK07604yRIoBGq9cAiSUqhOv5eZwqnM6n3k2Qb4mIvnIEx77gbpgPnmx5go66kmZMwK05PhRIQghBID5TwNKFqEuVy6wf2kO9z4Tiq8mKNz9AEw2FiNrsc%2BIdvqH%2BWprOG8Nee%2FDTpc%2F%2F8b40rcNjsWrOsx47BrjztV3zyKjPAo2cm8fR7dBXhWY3EW8uLsD98Fl2SkwffZZCDIRkvDzCzXdZGIY6X2JNjmW60fkROpQrL9y9O9zkuAv%2BHA0OTwo6dKtxmCFyig9W%2FwCbX%2FYqW9UjuhNQ%3D%3D'
+    // let bathyurl = 'http://127.0.0.1:8080/bathy_nozip.pmtiles'
+    let bathy_json_style;
+    var bathy_style = "{\"layers\":[{\"type\":\"line\",\"ID\":\"124\",\"paint\":{\"line-color\":\"green\",\"line-width\":2}},{\"type\":\"fill\",\"source-layer\":\"n8ofish_bathy_3857_v2\",\"paint\":{\"fill-color\":\"#F3F3F3\",\"fill-opacity\":0.5}}]}"
+    // var bathy_style = "{\"layers\":[{\"type\":\"fill\",\"source-layer\":\"n8ofish_bathy_3857_v2\",\"paint\":{\"fill-color\":\"#F3F3F3\",\"fill-opacity\":0.5}},{\"type\":\"fill\",\"ID\":\"128\",\"paint\":{\"fill-color\":\"#BFBFBF\",\"fill-opacity\":1}}}]}"
+    console.log('BATHY STEP 2')
+    try {
+      bathy_json_style = JSON.parse(bathy_style);
+    }
+    catch (e) {
+      bathy_json_style = bathy_style;
+    }
+    console.log('BATHY STEP 3')
+    let bathy_result = new protomaps.json_style(bathy_json_style, {})
+    const bathy = new protomaps.PMTiles(bathyurl)
+    console.log('BATHY STEP 4 ')
+    for(const key in bathy){
+      console.log(`BATHY ${key} `,bathy[key])
+    }
+    console.log('BATHY STEP 5')
+    bathy.metadata().then(m => {
+      console.log('BATHY STEP 6')
+      let bounds_str = m.bounds.split(',')
+      let bounds = [[+bounds_str[1], +bounds_str[0]], [+bounds_str[3], +bounds_str[2]]]
+      console.log('BATHY STEP 7')
+      map.createPane('temperature');
+      map.getPane('temperature').style.zIndex = 400;
+      layer = protomaps.leafletLayer({ url: bathy, bounds: bounds, paint_rules: bathy_result.paint_rules, label_rules: bathy_result.label_rules, pane: 'temperature'})
+      console.log('BATHY STEP 8')
+      layer.addTo(map)
+    });
+  </script>
+</body>
+
+</html>

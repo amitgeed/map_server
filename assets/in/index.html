@@ -1,0 +1,359 @@
+<html>
+
+<head>
+    <title>FishEdge Web viewer - Numer8</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../libs/leaflet/leaflet.css" />
+    <link rel="stylesheet" href="../libs/leaflet/MarkerCluster.css" />
+    <link rel="stylesheet" href="../libs/leaflet/leaflet-velocity.min.css">
+
+    <link rel="stylesheet" href="../libs/leaflet/styledLayerControl.css">
+
+    <link rel="stylesheet" href="../libs/css/styles.css" />
+    <script src="../libs/jquery.min.js"></script>
+    <script src="../libs/leaflet/leaflet.js"></script>
+    <script src="../libs/leaflet/protomap.js"></script>
+    <script src="../libs/leaflet/leaflet.geometryutil.js"></script>
+    <!-- MBTILES -->
+    <script src="../libs/leaflet/sql.js"></script>
+    <script src="../libs/leaflet/Leaflet.TileLayer.MBTiles.js"></script>
+
+
+
+
+    <script src="../libs/leaflet/styledLayerControl.js"></script>
+    <script src="../libs/leaflet/Leaflet.LayerGroup.Collision.js"></script>
+    <script src="../libs/leaflet/rbush.js"></script>
+    <script src="../libs/leaflet/leaflet.polylineDecorator.js"></script>
+
+    <script src="../libs/leaflet/topojson.min.js"></script>
+    <script src="../libs/leaflet/leaflet.markercluster.js"></script>
+    <script src="../libs/leaflet/leaflet-velocity.min.js"></script>
+    <script src="../libs/leaflet/leaflet-velocity.min.js"></script>
+    <script src="../libs/leaflet/Leaflet.Graticule.js"></script>
+    <script src="../libs/leaflet/turf.min.js"></script>
+    <script src="../libs/leaflet/leaflet-polygon.fillPattern.js"></script>
+    <script src="../libs/leaflet/leaflet-ant-path.js"></script>
+
+    <style>
+        @font-face {
+            font-family: 'Open Sans';
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: url('../libs/fonts/opensans_regular.ttf');
+        }
+
+        * {
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        img {
+            image-rendering: auto;
+        }
+
+        .img-pixelated {
+            image-rendering: auto;
+        }
+
+        .leaflet-div-icon2 {
+            height: 4px;
+            width: 4px;
+            background-color: #797979;
+            opacity: 1;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .portname {
+            font-size: 10px;
+            color: #444;
+        }
+
+        .leaflet-div-icon {
+            background: transparent;
+            border: none;
+        }
+
+        .default-img {
+            image-rendering: auto;
+        }
+
+        body {
+            overflow-y: hidden;
+        }
+
+        .custom-popup {
+            background-color: #FFDB58;
+            height: 100%;
+            width: 100%;
+            overflow-y: auto;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            z-index: 1100;
+        }
+
+        .layer-info-title {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .layer-info-subtitle {
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .layer-info-content {
+            font-size: 10px
+        }
+
+        .custom-popup-search {
+            background-color: #FFDB58;
+            width: 300px;
+            padding: 20px;
+            border-radius: 3px;
+            overflow-y: auto;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            z-index: 1010;
+            left: 45%;
+            top: 50%;
+            margin-left: -150px;
+            margin-top: -150px;
+            text-align: center;
+            display: none;
+            box-shadow: 2px 2px 4px 1px #AAAAAA;
+        }
+
+        .range-slider .input-range::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          width: var(--sl-thu-width);
+          height: 44px;
+          border-radius: 2px;
+          background: #AAAAAA44;
+          cursor: pointer;
+          -webkit-transition: background .15s ease-in-out;
+          transition: background .15s ease-in-out;
+        }
+        .range-slider .input-range::-webkit-slider-thumb:hover {
+          background: #AAAAAA44;
+        }
+        .range-slider .input-range:active::-webkit-slider-thumb {
+          background: #AAAAAA44;
+        }
+        .range-slider .input-range::-moz-range-thumb {
+          width: 20px;
+          height: 20px;
+          border: 0;
+          border-radius: 50%;
+          background: #AAAAAA44;
+          cursor: pointer;
+          -webkit-transition: background .15s ease-in-out;
+          transition: background .15s ease-in-out;
+        }
+        .range-slider .input-range::-moz-range-thumb:hover {
+          background: #fff;
+        }
+        .range-slider .input-range:active::-moz-range-thumb {
+          background: #fff;
+        }
+
+        ::-moz-range-track {
+          background: #353535;
+          border: 0;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="map"></div>
+    <div class="custom-popup-search">
+        <h6 id="search-title" style="margin: 8px;font-size: 18px;">Search location</h6>
+        <div id="search-lat-lng-deci-container">
+            <input placeholder="Latitude" id="search-lat" class="custom-input-primary" type="number"
+                onkeyup='validateDecimal(event)' /><br />
+            <input placeholder="Longitude" id="search-lng" class="custom-input-primary" type="number"
+                onkeyup='validateDecimal(event)' /><br />
+        </div>
+
+        <div id="search-lat-lng-dms-container" style="text-align:left;">
+            <label id="lat-label" style="font-size:12px;">Latitude</label><br />
+            <input
+                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                placeholder="&#176; (-90 &#8211; 90)" id="search-lat-d" class="custom-input-primary-33" type="number"
+                maxlength="3" onkeyup='validateDecimal(event)' />
+            <input
+                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                placeholder="' (0 &#8211; 59)" id="search-lat-m" class="custom-input-primary-33" type="number"
+                maxlength="2" onkeyup='validateDecimal(event)' />
+            <input
+                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                placeholder='" (0 &#8211; 59)' id="search-lat-s" class="custom-input-primary-33" type="number"
+                maxlength="2" onkeyup='validateDecimal(event)' /><br />
+            <br />
+            <label id="lng-label" style="font-size:12px;color: #2427F0;">Longitude</label><br />
+            <input
+                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                placeholder="&#176; (-180 &#8211; 180)" id="search-lng-d" class="custom-input-primary-33" type="number"
+                maxlength="3" onkeyup='validateDecimal(event)' />
+            <input
+                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                placeholder="' (0 &#8211; 59)" id="search-lng-m" class="custom-input-primary-33" type="number"
+                maxlength="2" onkeyup='validateDecimal(event)' />
+            <input
+                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                placeholder='" (0 &#8211; 59)' id="search-lng-s" class="custom-input-primary-33" type="number"
+                maxlength="2" onkeyup='validateDecimal(event)' /><br />
+        </div>
+        <br />
+        <button id="search-search-btn" class="custom-btn-primary" onclick="searchByLatLng()">Search</button>
+        <button id="search-close-btn" class="custom-btn-primary" onclick="closeSearchPopUp()">Close</button>
+    </div>
+    <div id="custom-popup-container" style="width: 100%; height: 100%;display: none;">
+        <div class="custom-popup">
+            <div style="padding: 18px;">
+                <div><span class="layer-info-title" id="layer_title">Layer details</span><span style="float: right;"
+                        onclick="closeLayersHelp()">X</span></div><br />
+                <span class="layer-info-subtitle" id="pfz_def_title"></span><br />
+                <span class="layer-info-content" id="pfz_def"></span>
+                <br />
+                <br />
+                <span class="layer-info-subtitle" id="algal_bloom_def_title"></span><br />
+                <span class="layer-info-content" id="algal_bloom_def"></span>
+                <br />
+                <br />
+                <span class="layer-info-subtitle" id="temperature_def_title"></span><br />
+                <span class="layer-info-content" id="temperature_def"></span>
+                <br />
+                <br />
+                <span class="layer-info-subtitle" id="wind_def_title"></span><br />
+                <span class="layer-info-content" id="wind_def"></span>
+                <br />
+                <br />
+                <span class="layer-info-subtitle" id="rain_def_title"></span><br />
+                <span class="layer-info-content" id="rain_def"></span>
+                <br />
+                <br />
+                <span class="layer-info-subtitle" id="graticule_def_title"></span><br />
+                <span class="layer-info-content" id="graticule_def"></span>
+                <br />
+                <br />
+                <span class="layer-info-subtitle" id="lightning_def_title"></span><br />
+                <span class="layer-info-content" id="lightning_def"></span>
+                <br />
+                <br />
+                <span class="layer-info-subtitle" id="bathymetry_def_title"></span><br />
+                <span class="layer-info-content" id="bathymetry_def"></span>
+                <br />
+                <br />
+                <span class="layer-info-subtitle" id="oc_def_title"></span><br />
+                <span class="layer-info-content" id="oc_def"></span>
+                <br />
+                <br />
+            </div>
+        </div>
+    </div>
+    <div id="layer-list-container">
+        <span onclick="toggleLayersPanel()"
+            style="height:auto; background: #FFDB58;padding: 10px;border-radius: 15px 0px 0px 15px;padding-top: 15px;box-shadow: 0px 0px 6px 0px rgba(125,125,125,1);">
+            <img id="img-layer-list" src="../libs/images/layers_icon.png" width="25"
+                style="margin-top: 15px;" />
+        </span>
+        <div id="layer-list" style="display: none;box-shadow: 0px 0px 6px 0px rgba(125,125,125,1);padding:8px;">
+        </div>
+    </div>
+    <div id="panel-container">
+        <div id="panel-toggle-icon" style="text-align: left;padding-left:10px;padding-top:15px;">
+            <div id="cloud-cover-container" class="layer-panel"
+                style="display:none;width:max-content;margin-left: 5px;padding: 8px;border-radius: 4px;background: #FFF;box-shadow: 0px 0px 3px 0px rgba(125,125,125,1);">
+                <img style="display: inline;vertical-align:middle" id="img-cloud-cover" src="" width="25" />
+                <p id="cloud-cover-value" style="color:#888;display: inline;vertical-align:middle;font-size:12px;"></p>
+            </div><br />
+            <span onclick="togglePanel()"
+                style="margin-left:15px;padding: 12px;border-radius: 15px 15px 0px 00px;background: #FFF;box-shadow: 0px -2px 4px 0px rgba(125,125,125,1);">
+                <img id="img-bottom-panel" src="../libs/images/expand-arrow.png" width="25" />
+            </span>
+            <div style="float:right; padding-top: 8px; padding-right: 8px; font-size: 10px;">
+                <img id="view-gps-location-icon" style='display: none;' width='10' src='../libs/images/gps_icon.png' />
+                <span id="view-gps-location"></span>
+            </div>
+        </div>
+        <div id="multi-day-slider" style="display:none;">
+            <div class="range-slider">
+                <input class="input-range" style="position:relative;z-index:1000;" type="range" step="86400000">
+                <div class="interval-labels"
+                    style="position:relative;z-index:999;overflow-x:hidden;width:100%;height:40px;margin-top:-40px">
+                </div>
+            </div>
+        </div>
+        <div onscroll="onBottomPanelScroll()" id="panel" style="overflow-y: hidden;">
+            <table class="weather-detail" id="weather_table" cellspacing="0"
+                style="height: 100%;padding-bottom: 15px;margin-left:30px;overflow-y: hidden;"></table>
+        </div>
+        <div id="location-details-1" style="display:none;">
+            <table style="width: 100%; font-size: 12px;">
+                <tr>
+                    <td>
+                        <img  style='' width='10' src='../libs/images/marker-2.png' />
+                        <span id="latitude"></span>,<span id="longitude"></span>
+                    </td>
+                    <td>
+                        <span id="depth-title" style="color: #999;"></span>: <span id="depth"></span>
+                    </td>
+                    <td>
+                        <span id="dist-title" style="color: #999;"></span>: <span id="distance"></span> <span
+                            id="direction"></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="gfs_overlay"
+            style="display:none;position:absolute;width:100%;background: #DDDDDDAA;text-align:center;">
+            <button id="btn_gfs_overlay" class="custom-btn-primary"></button>
+        </div>
+        <div id="tide_overlay"
+            style="display:none;position:absolute;width:100%;background: #DDDDDDAA;text-align:center;">
+            <button id="btn_tide_overlay" class="custom-btn-primary"></button>
+        </div>
+    </div>
+    <script src="../libs/js/unit-converter.js"></script>
+    <script src="./libs/js/app-country-specific-functions.js"></script>
+    <script src="../libs/js/test-functions.js"></script>
+    <script src="../libs/js/app.js"></script>
+    <script>
+
+        function validateDecimal(evt) {
+            var theEvent = evt || window.event;
+            var key = theEvent.keyCode || theEvent.which;
+            if (key == 229 && evt.target.value.indexOf('.') > -1) {
+                theEvent.returnValue = false;
+                if (theEvent.preventDefault) theEvent.preventDefault();
+            }
+
+            // Handle paste
+            // if (theEvent.type === 'paste') {
+            //     key = event.clipboardData.getData('text/plain');
+            // } else {
+            // // Handle key press
+            //     var key = theEvent.keyCode || theEvent.which;
+            //     key = String.fromCharCode(key);
+            // }
+            //   console.log(theEvent.keyCode, evt.target.value);
+            // if(key=='.' && evt.target.value.indexOf('.')>-1){
+            //   theEvent.returnValue = false;
+            //   if(theEvent.preventDefault) theEvent.preventDefault();
+            // }
+            // var regex = /[0-9]|\./;
+            // if( !regex.test(key) ) {
+            //   theEvent.returnValue = false;
+            //   if(theEvent.preventDefault) theEvent.preventDefault();
+            // }
+        }
+    </script>
+</body>
+
+</html>

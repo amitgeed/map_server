@@ -1,0 +1,54 @@
+<html>
+
+<head>
+    <title>FishEdge Web viewer - Numer8</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../libs/leaflet/leaflet.css" />
+    <link rel="stylesheet" href="../libs/leaflet/leaflet.draw-src.css" />
+    <link rel="stylesheet" href="../libs/css/draw.css" />
+    <script src="../libs/jquery.min.js"></script>
+    <script src="../libs/leaflet/leaflet.js"></script>
+    <script src="../libs/leaflet/protomap.js"></script>
+    <script src="../libs/leaflet/leaflet.draw-src.js"></script>
+    <script src="../libs/leaflet/leaflet.geometryutil.js"></script>
+</head>
+<style>
+    @font-face {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: url('http://127.0.0.1:8080/libs/fonts/opensans_regular.ttf');
+    }
+
+    * {
+        font-family: 'Open Sans', sans-serif;
+    }
+</style>
+
+<body>
+    <div id="map"></div>
+    <div id="info"
+        style="position: fixed;bottom: 0;right: 0;z-index: 1000;background-color: white;width: 100%;text-align: center;">
+
+    </div>
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close">&times;</span>
+                <h2>Edit coordinates</h2>
+            </div>
+            <div class="modal-body">
+                Latitude: <input placeholder="Latitude" id="search-lat" class="custom-input-primary" type="number"
+                    onkeyup='validateDecimal(event)' /><br />
+                Longitude: <input placeholder="Longitude" id="search-lng" class="custom-input-primary" type="number"
+                    onkeyup='validateDecimal(event)' /><br />
+                <button onclick="confirmCoordinates()">Confirm</button>
+            </div>
+            <div class="modal-footer"></div>
+        </div>
+    </div>
+    <script src="./libs/js/app-country-specific-functions.js"></script>
+    <script src="../libs/js/draw-box.js"></script>
+</body>
+</html>

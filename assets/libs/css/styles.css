@@ -1,0 +1,249 @@
+body{
+  margin: 0;
+  padding: 0;
+}
+#map{
+  width: 100%;
+  height: 100vh
+}
+.leaflet-marker-icon {
+  border: none;
+  background: transparent;
+}
+
+*{
+font-family: 'Open Sans', sans-serif;
+}
+#map{
+  width: 100%;
+  height: 100vh
+}
+.leaflet-marker-icon {
+  border: none;
+  background: transparent;
+}
+#panel-container{
+position: fixed;
+bottom: 0px;
+width: 100%;
+z-index: 1000;
+overflow-x: scroll;
+overflow-y: hidden;
+}
+#panel{
+display: -webkit-inline-box;
+overflow-x: scroll;
+height: 0;
+width: 100%;
+background: white;
+transition-duration: 0.5s;
+box-shadow: 0px -2px 4px 0px rgba(125,125,125,1);
+}
+.weather-column{
+width: 200px;
+height: 100%;
+border: 1px solid red;
+}
+#panel > table{
+/*padding: 20px;*/
+}
+.location-detail > tbody > tr > td, .weather-detail > tbody > tr > td{
+text-align: center;
+font-size: 12px;
+padding: 10px;
+}
+.day-header{
+text-align: center;
+}
+.weather-icon > img{
+width: 25px;
+}
+.weather-icon{
+padding: 5px;
+}
+th{
+white-space: nowrap;
+text-align: left;
+font-size: 12px;
+}
+td{
+padding-left: 5px;
+padding-right: 5px;
+}
+
+#weather_table > tr > td {
+  text-align: center;
+font-size: 12px;
+border:0px;
+  border-collapse:collapse;
+  border-spacing:0px;
+}
+
+
+
+
+
+
+#layer-list-container{
+display: -webkit-inline-box;
+position: fixed;
+top: 20px;
+right: 0px;
+z-index: 1000;
+width: auto;
+height: auto;
+}
+
+#layer-list{
+  width: auto;
+transition-duration: 0.5s;
+background: #FFDB58;
+padding: 10px 0px;
+  border-radius: 5px;
+}
+
+
+
+
+/* Customize the label (the container) */
+.chk-container {
+display: block;
+position: relative;
+padding-left: 35px;
+margin-bottom: 12px;
+cursor: pointer;
+font-size: 12px;
+-webkit-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+color: #540054;
+margin-top: 2px;
+margin-left: 10px;
+margin-right: 10px;
+}
+
+/* Hide the browser's default checkbox */
+.chk-container input {
+position: absolute;
+opacity: 0;
+cursor: pointer;
+height: 0;
+width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+position: absolute;
+top: 5;
+left: 0;
+height: 25px;
+width: 25px;
+background-color: #eee;
+border-radius: 8px;
+margin: 2px;
+}
+
+/* On mouse-over, add a grey background color */
+.chk-container:hover input ~ .checkmark {
+background-color: #eee;
+}
+
+/* When the checkbox is checked, add a blue background */
+.chk-container input:checked ~ .checkmark {
+background-color: #540054;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+content: "";
+position: absolute;
+display: none;
+}
+
+/* Show the checkmark when checked */
+.chk-container input:checked ~ .checkmark:after {
+display: block;
+}
+
+/* Style the checkmark/indicator */
+.chk-container .checkmark:after {
+left: 9px;
+top: 5px;
+width: 5px;
+height: 10px;
+border: solid white;
+border-width: 0 3px 3px 0;
+-webkit-transform: rotate(45deg);
+-ms-transform: rotate(45deg);
+transform: rotate(45deg);
+}
+.checkmark-radio{
+  border-radius: 50%;
+}
+.chk-container .checkmark-radio:after {
+ top: 8px;
+left: 8px;
+width: 7px;
+height: 7px;
+border-radius: 50%;
+background: white;
+}
+
+.custom-btn-primary{
+  color: white;
+  background-color: #540054;
+  border: none;
+  border-radius: 3px;
+  padding: 5px 10px;
+}
+
+.custom-input-primary{
+  border: none;
+  border-radius: 3px;
+  margin: 4px;
+  padding: 5px;
+  width: 80%;
+}
+
+.headcol {
+position: absolute;
+width: auto;
+left: 0;
+top: auto;
+/*margin-top: 8px;*/
+background-color: #fafafa;
+/*box-shadow: 0px 0px 4px 0px rgba(175,175,175,1);*/
+}
+.headcol > img {
+  display: block;
+  vertical-align: bottom;
+  width: 20px;
+}
+#location-details-1:after{
+  display: inline-block;width: 100%;
+}
+#location-details-1{
+  background-color: #fff;
+}
+.weather-detail > tr > td{
+text-align: center;
+font-size: 12px;
+padding: 10px;
+  border-width:0px;
+  white-space: nowrap;
+}
+#span1 { background-color: none; width: 10px; float: right; padding-left: 0%; font-size:7px; }
+#span2 { background-color: none; width: 16px; float: left; font-size:7px; }
+.t { border-top: 0.3px solid black; }
+.r { border-right: 0px solid black; height: 100%; }
+.img1 { height:20px;width: 32px; }
+.date-sticky{position:sticky;left:40px;opacity: 1;transition: opacity 0.5s ease-in;}
+.date-hide{transition: opacity 0.5s ease-out;opacity: 0;}
+.custom-input-primary-33{
+  border: 1px solid #888;
+  border-radius:1px;
+  margin:1px;
+  padding:5px;
+  width:31%;
+}
