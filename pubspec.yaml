@@ -41,7 +41,6 @@ flutter:
     - assets/libs/leaflet/images/
     - assets/libs/css/
     - assets/in/libs/js/
-    - assets/bathy_nozip.pmtiles
 
   # example:
   # fonts:

@@ -1970,6 +1970,8 @@ var protomaps = (() => {
     return { geom: lines, bbox: [x1, y1, x2, y2] };
   };
   function parseTile(buffer, tileSize) {
+    console.log(`PARSED`, buffer)
+    console.log(`PARSED`, tileSize)
     let v = new import_vector_tile.VectorTile(new import_pbf.default(buffer));
     let result = new Map();
     for (let [key, value] of Object.entries(v.layers)) {
@@ -2003,6 +2005,10 @@ var protomaps = (() => {
       this.controllers = [];
     }
     get(c, tileSize) {
+      for(const key in c){
+        console.log(c[key])
+      }
+      console.log(tileSize)
       return __async(this, null, function* () {
         this.controllers = this.controllers.filter((cont) => {
           if (cont[0] != c.z) {
@@ -2012,18 +2018,27 @@ var protomaps = (() => {
           return true;
         });
         let result = yield this.p.getZxy(c.z, c.x, c.y);
-        if (!result)
+        console.log(result)
+        if (!result){
+          console.log(`Tile ${c.z} ${c.x} ${c.y} not found in archive`);
           throw new Error(`Tile ${c.z} ${c.x} ${c.y} not found in archive`);
+        }
         const controller = new AbortController();
         this.controllers.push([c.z, controller]);
         const signal = controller.signal;
+        console.log('CONTROL WAS HERE')
         return new Promise((resolve, reject) => {
+          console.log("URL", this.p.url)
+          console.log(`Range: "bytes=" + ${result[0]} + "-" + ${(result[0] + result[1] - 1)}`)
           fetch(this.p.url, { headers: { Range: "bytes=" + result[0] + "-" + (result[0] + result[1] - 1) }, signal }).then((resp) => {
+            console.log(`RESP: `, resp)
             return resp.arrayBuffer();
           }).then((buffer) => {
+            console.log('CONTROLE REACHED HERE')
             let result2 = parseTile(buffer, tileSize);
             resolve(result2);
           }).catch((e) => {
+            console.log('GOT ERROR HERE ', e)
             reject(e);
           });
         });
@@ -3693,8 +3708,8 @@ var protomaps = (() => {
   var LeafletLayer = class extends L.GridLayer {
     constructor(options) {
       // console.log(Object.values(options));
-      for(const key in options){
-        var op = options[key]
+      // for(const key in options){
+        // var op = options[key]
         //  for(const i in options[key]) {
         //    try{
         //     console.log(JSON.parse(op[i]))
@@ -3702,8 +3717,8 @@ var protomaps = (() => {
         //     console.log(op[i])
         //    }
         //  }
-        console.log(op[key])
-      }
+        // console.log(op[key])
+      // }
       if (options.noWrap && !options.bounds)
         options.bounds = [[-90, -180], [90, 180]];
       super(options);

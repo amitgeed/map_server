@@ -50,6 +50,10 @@
 
 <body>
   <div id="map"></div>
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@1.14.1-rc.2/dist/maplibre-gl.css" crossorigin="anonymous">
+        <script src="https://unpkg.com/maplibre-gl@1.14.1-rc.2/dist/maplibre-gl.js" crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/pmtiles@1.0.0/dist/index.js"></script>
+        
   <script>
     var map = L.map('map');
 
@@ -82,36 +86,36 @@
     //     };
     // }
 
-    let baseurl = 'https://storage.googleapis.com/n8-bsaemaps/india-latest.pmtiles?GoogleAccessId=gs-reader%40fishedge-dev.iam.gserviceaccount.com&Expires=1645711346&Signature=baq0GhZDdaeDwt%2FQqteUR8DzUQAqZO4rinOLdNgTx%2FeUN1lQsCAHVJePA0A6o817WT%2FwF4yFPfD7nh2go%2FCcvQblRKgX%2FkKZG6%2BHMY3nCc6TekAe1AdNy%2B99s2XUCJwZ2rGYqdGah7Fl3mei9xb8%2Bs2fRlRT4%2B1VYOLEzcepzUgpdhLb0hgai%2F4U9VM8wsO37G3jI4BpZuF8WkfEle7gTXUz9dl6mRthK6uEPi8eo4ltGYZ8LG68LClhFj5t3yU9bcIGzblqOV16FBQ2oYOwa0FPVmUiqf9AR58JQHG6rt3CyHmkzptRIJSA3AfZ2rftjMLhOIWF0lW1j55%2BSNu8Pw%3D%3D'
-    let basejson_style;
-    var basestyle = "{\"layers\":[{\"type\":\"line\",\"source-layer\":\"transportation\",\"paint\":{\"line-color\":\"#ab2c49\",\"line-width\":2}},{\"type\":\"line\",\"source-layer\":\"waterway\",\"paint\":{\"line-color\":\"#c2c2c2\",\"line-width\":2}},{\"type\":\"line\",\"source-layer\":\"aeroway\",\"paint\":{\"line-color\":\"#f3f3f3\",\"line-width\":4}},{\"type\":\"fill\",\"source-layer\":\"building\",\"paint\":{\"fill-color\":\"#f3f3f3\",\"fill-opacity\":0.5}},{\"type\":\"fill\",\"source-layer\":\"water\",\"paint\":{\"fill-color\":\"#bfbfbf\",\"fill-opacity\":1}},{\"type\":\"line\",\"source-layer\":\"state_boundary\",\"paint\":{\"line-color\":\"#6a6a6a77\",\"line-width\":2}},{\"type\":\"line\",\"source-layer\":\"country_boundary\",\"paint\":{\"line-color\":\"#727272\",\"line-width\":0.25}},{\"type\":\"symbol\",\"source-layer\":\"transportation_name\",\"layout\":{\"text-size\":10,\"text-font\":\"sans-serif\",\"symbol-placement\":\"line\"},\"paint\":{\"text-color\":\"#070707\",\"text-halo-color\":\"#00000000\",\"text-halo-width\":0}},{\"type\":\"fill\",\"source-layer\":\"buildings\",\"paint\":{\"fill-color\":\"black\"}},{\"type\":\"symbol\",\"source-layer\":\"place\",\"layout\":{\"text-size\":10,\"text-font\":\"sans-serif\"},\"paint\":{\"text-color\":\"#070707\"}}]}"
-    console.log('STEP 1')
-    try {
-      basejson_style = JSON.parse(basestyle);
-    }
-    catch (e) {
-      basejson_style = basestyle;
-    }
-    console.log('STEP 2')
-    let bresult = new protomaps.json_style(basejson_style, {})
-    const base = new protomaps.PMTiles(baseurl)
-    console.log('STEP 3')
-    for(const key in base){
-      console.log(`${key} `,base[key])
-    }
-    base.metadata().then(m => {
-      console.log('STEP 4')
-      let bounds_str = m.bounds.split(',')
-      let bounds = [[+bounds_str[1], +bounds_str[0]], [+bounds_str[3], +bounds_str[2]]]
-      layer = protomaps.leafletLayer({ url: base, bounds: bounds, paint_rules: bresult.paint_rules, label_rules: bresult.label_rules })
-      console.log('STEP 5')
-      layer.addTo(map)
-    });
+    // let baseurl = 'https://storage.googleapis.com/n8-bsaemaps/india-latest.pmtiles?GoogleAccessId=gs-reader%40fishedge-dev.iam.gserviceaccount.com&Expires=1645853737&Signature=QZ0Y1EPOUhIA4pCdiciGR7RyfcaUMrhS4kDF1%2BZF8Jsv7I%2BobHEVi6LagjaMayxs6H2ziDC7kKlW%2BMYDLRq9tNP0DWaghBTP8Apg22RpKsIT%2FMohdKOH2OSdEKgRkcILKn4HsQExoU%2F00Fqb%2Bd72UUfXxUyThi6YCNQ9Tov%2BBeFeiIthKXNbnzijCdcIrHbE63AQb%2B9R5858sGgXtZb4h1KPYlSRlD8rRwhufcHyjiD4B%2B1C5hnNDZfqWzuoINa%2FgsTdkATQx1QZGmNNxSxBW3D9KJbPySwMzF%2Fo7tzoVtNv3FKM6qaZXSI7TDBpEOUwLjU15bMZ8y8v%2Fk5R7ioS8A%3D%3D'
+    // let basejson_style;
+    // var basestyle = "{\"layers\":[{\"type\":\"line\",\"source-layer\":\"transportation\",\"paint\":{\"line-color\":\"#ab2c49\",\"line-width\":2}},{\"type\":\"line\",\"source-layer\":\"waterway\",\"paint\":{\"line-color\":\"#c2c2c2\",\"line-width\":2}},{\"type\":\"line\",\"source-layer\":\"aeroway\",\"paint\":{\"line-color\":\"#f3f3f3\",\"line-width\":4}},{\"type\":\"fill\",\"source-layer\":\"building\",\"paint\":{\"fill-color\":\"#f3f3f3\",\"fill-opacity\":0.5}},{\"type\":\"fill\",\"source-layer\":\"water\",\"paint\":{\"fill-color\":\"#bfbfbf\",\"fill-opacity\":1}},{\"type\":\"line\",\"source-layer\":\"state_boundary\",\"paint\":{\"line-color\":\"#6a6a6a77\",\"line-width\":2}},{\"type\":\"line\",\"source-layer\":\"country_boundary\",\"paint\":{\"line-color\":\"#727272\",\"line-width\":0.25}},{\"type\":\"symbol\",\"source-layer\":\"transportation_name\",\"layout\":{\"text-size\":10,\"text-font\":\"sans-serif\",\"symbol-placement\":\"line\"},\"paint\":{\"text-color\":\"#070707\",\"text-halo-color\":\"#00000000\",\"text-halo-width\":0}},{\"type\":\"fill\",\"source-layer\":\"buildings\",\"paint\":{\"fill-color\":\"black\"}},{\"type\":\"symbol\",\"source-layer\":\"place\",\"layout\":{\"text-size\":10,\"text-font\":\"sans-serif\"},\"paint\":{\"text-color\":\"#070707\"}}]}"
+    // console.log('STEP 1')
+    // try {
+    //   basejson_style = JSON.parse(basestyle);
+    // }
+    // catch (e) {
+    //   basejson_style = basestyle;
+    // }
+    // console.log('STEP 2')
+    // let bresult = new protomaps.json_style(basejson_style, {})
+    // const base = new protomaps.PMTiles(baseurl)
+    // console.log('STEP 3')
+    // /* for(const key in base){
+    //   console.log(`${key} `,base[key])
+    // } */
+    // base.metadata().then(m => {
+    //   console.log('STEP 4')
+    //   let bounds_str = m.bounds.split(',')
+    //   let bounds = [[+bounds_str[1], +bounds_str[0]], [+bounds_str[3], +bounds_str[2]]]
+    //   layer = protomaps.leafletLayer({ url: base, bounds: bounds, paint_rules: bresult.paint_rules, label_rules: bresult.label_rules })
+    //   console.log('STEP 5')
+    //   layer.addTo(map)
+    // });
 
 
     console.log('BATHY STEP 1')
-    let bathyurl = 'https://storage.googleapis.com/mvt_test/bathymetry/bathy_z11_3857_nogzip.pmtiles?GoogleAccessId=gs-reader%40fishedge-dev.iam.gserviceaccount.com&Expires=1645785616&Signature=ZyFZp%2BMlFmkB9xO99iPD8qyBHj0FxNEHRC14oBasmScU5X8mbB1W6BzyzbK07604yRIoBGq9cAiSUqhOv5eZwqnM6n3k2Qb4mIvnIEx77gbpgPnmx5go66kmZMwK05PhRIQghBID5TwNKFqEuVy6wf2kO9z4Tiq8mKNz9AEw2FiNrsc%2BIdvqH%2BWprOG8Nee%2FDTpc%2F%2F8b40rcNjsWrOsx47BrjztV3zyKjPAo2cm8fR7dBXhWY3EW8uLsD98Fl2SkwffZZCDIRkvDzCzXdZGIY6X2JNjmW60fkROpQrL9y9O9zkuAv%2BHA0OTwo6dKtxmCFyig9W%2FwCbX%2FYqW9UjuhNQ%3D%3D'
-    // let bathyurl = 'http://127.0.0.1:8080/bathy_nozip.pmtiles'
+    // let bathyurl = 'https://storage.googleapis.com/mvt_test/bathymetry/bathy_z11_3857_nogzip.pmtiles?GoogleAccessId=gs-reader%40fishedge-dev.iam.gserviceaccount.com&Expires=1645785616&Signature=ZyFZp%2BMlFmkB9xO99iPD8qyBHj0FxNEHRC14oBasmScU5X8mbB1W6BzyzbK07604yRIoBGq9cAiSUqhOv5eZwqnM6n3k2Qb4mIvnIEx77gbpgPnmx5go66kmZMwK05PhRIQghBID5TwNKFqEuVy6wf2kO9z4Tiq8mKNz9AEw2FiNrsc%2BIdvqH%2BWprOG8Nee%2FDTpc%2F%2F8b40rcNjsWrOsx47BrjztV3zyKjPAo2cm8fR7dBXhWY3EW8uLsD98Fl2SkwffZZCDIRkvDzCzXdZGIY6X2JNjmW60fkROpQrL9y9O9zkuAv%2BHA0OTwo6dKtxmCFyig9W%2FwCbX%2FYqW9UjuhNQ%3D%3D'
+    let bathyurl = 'http://127.0.0.1:8080/bathy_nozip.pmtiles'
     let bathy_json_style;
     var bathy_style = "{\"layers\":[{\"type\":\"line\",\"ID\":\"124\",\"paint\":{\"line-color\":\"green\",\"line-width\":2}},{\"type\":\"fill\",\"source-layer\":\"n8ofish_bathy_3857_v2\",\"paint\":{\"fill-color\":\"#F3F3F3\",\"fill-opacity\":0.5}}]}"
     // var bathy_style = "{\"layers\":[{\"type\":\"fill\",\"source-layer\":\"n8ofish_bathy_3857_v2\",\"paint\":{\"fill-color\":\"#F3F3F3\",\"fill-opacity\":0.5}},{\"type\":\"fill\",\"ID\":\"128\",\"paint\":{\"fill-color\":\"#BFBFBF\",\"fill-opacity\":1}}}]}"
@@ -126,9 +130,9 @@
     let bathy_result = new protomaps.json_style(bathy_json_style, {})
     const bathy = new protomaps.PMTiles(bathyurl)
     console.log('BATHY STEP 4 ')
-    for(const key in bathy){
+    /* for(const key in bathy){
       console.log(`BATHY ${key} `,bathy[key])
-    }
+    } */
     console.log('BATHY STEP 5')
     bathy.metadata().then(m => {
       console.log('BATHY STEP 6')
@@ -141,6 +145,46 @@
       console.log('BATHY STEP 8')
       layer.addTo(map)
     });
+
+    /* let cache = new pmtiles.ProtocolCache();
+            maplibregl.addProtocol("pmtiles",cache.protocol);
+            var style = {
+                "version": 8,
+                "sources": {
+                    "zcta": {
+                        "type": "vector",
+                        "tiles": ["pmtiles://http://127.0.0.1:8080/bathy_nozip.pmtiles/{z}/{x}/{y}"],
+                        "maxzoom":7
+                    }
+                },
+                "layers": [
+                    {
+                        "id": "ztcta_fill",
+                        "type": "fill",
+                        "source":"zcta",
+                        "source-layer":"zcta",
+                        "paint": {
+                            "fill-color":"white"
+                        }
+                    },
+                    {
+                        "id": "zcta_stroke",
+                        "type": "line",
+                        "source":"zcta",
+                        "source-layer":"zcta",
+                        "paint": {
+                            "line-color":"steelblue",
+                            "line-width":0.5
+                        }
+                    }
+                ]
+            }
+            var map = new maplibregl.Map({
+                container: 'map',
+                center: [-101.43,44.34],
+                zoom: 3,
+                style: style
+            }); */
   </script>
 </body>
 

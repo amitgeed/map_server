@@ -187,8 +187,7 @@ class ServerUtils {
         // ..headers.add("Cache-Control", "public, max-age=0")
         // ..headers.add("Connection", "keep-alive")
         // ..headers.add("Keep-Alive", "timeout=5")
-        ..add(data!)
-        ..done;
+        ..add(data!);
     } else {
       sendErrResponse(request);
     }

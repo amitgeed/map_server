@@ -45,7 +45,7 @@ class _HomeViewState extends State<HomeView> {
                   ),
                 ));
               },
-              shouldInterceptFetchRequest:
+              /* shouldInterceptFetchRequest:
                   (controller, FetchRequest fetchRequest) async {
                 final fetchRequestWithAuthorization = fetchRequest.headers![{
                   'Access-Control-Allow-Origin': '*',
@@ -54,7 +54,7 @@ class _HomeViewState extends State<HomeView> {
                 }];
 
                 return fetchRequestWithAuthorization;
-              },
+              }, */
               onConsoleMessage: (controller, consoleMessage) {
                 print(consoleMessage.message);
               },
